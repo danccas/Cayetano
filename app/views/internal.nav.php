@@ -41,6 +41,17 @@
         </a>
       </li>
 
+      <hr class="sidebar-divider">
+      <div class="sidebar-heading">
+        Analisis
+      </div>
+      <li class="nav-item">
+        <a class="nav-link" href="//127.0.0.1:8010">
+          <i class="fas fa-fw fa-cog"></i>
+          <span>Grupo de riesgo</span>
+        </a>
+      </li>
+
       <hr class="sidebar-divider d-none d-md-block">
 
       <div class="text-center d-none d-md-inline">

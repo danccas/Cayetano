@@ -115,7 +115,8 @@ final Class Route {
     require_once($file);
   }
   public static function libraryOwn($file) {
-    $file = Route::getInstance()->web['dir'] . 'libs/' . $file . '.php';
+    $file = LIBRARYS . $file . '.php';
+    #$file = Route::getInstance()->web['dir'] . 'libs/' . $file . '.php';
     if(!file_exists($file))  {
       echo $file;
     }

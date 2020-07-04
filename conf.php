@@ -1,29 +1,18 @@
 <?php
-define('RAIZ', dirname(__FILE__) . '/');
-define('LIBRARYS', RAIZ . 'app/librarys/');
-define('VIEWS', RAIZ . 'app/views/');
-define('CONTROLLERS', RAIZ . 'app/controllers/');
-define('DEVEL_MODE', false);
-define('RAIZ_WEB', '/');
-define('FILE_ERROR', VIEWS . '404.php');
+Route::config(function($app) {
+  $app->attr('root', dirname(__FILE__) . '/');
+  $app->attr('librarys', $app->attr('root') . 'app/librarys/');
+  $app->attr('controllers', $app->attr('root') . 'app/controllers/');
+  $app->attr('views', $app->attr('root') . 'app/views/');
 
-require_once(LIBRARYS . 'misc.php');
-require_once(LIBRARYS . 'route.php');
-require_once(LIBRARYS . 'doris.pdo.php');
-require_once(LIBRARYS . 'pagination.php');
-require_once(LIBRARYS . 'identify.php');
-require_once(LIBRARYS . 'tablefy.php');
 
-Doris::registerDSN('hospital', 'mysql://root@localhost:3306/cayetano');
+  $app->library('Misc');
+  $app->library('doris.pdo', 'Doris');
+  $app->library('Pagination');
+  $app->library('Tablefy');
+  $app->library('Session');
+  $app->libraryOwn('Identify');
 
-define('DOMINIO_ACTUAL', '');
-define('SUBDOMINIO_ACTUAL', '');
-
-define('ES_AJAX', !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
-define('ES_POPY', ES_AJAX && !empty($_SERVER['HTTP_X_POPY']) && strtolower($_SERVER['HTTP_X_POPY']) == '9435');
-
-$DIAS  = array('domingo','lunes','martes','miercoles','jueves','viernes','sabado','domingo');
-$MESES = array('enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre');
-
-$FECHA_COMPLETA = $DIAS[date('N')] . ', ' . date('d') . ' de ' . $MESES[date('m') - 1] . ' de ' . date('Y');
-$HORA_COMPLETA  = date("h:i:s A");
+  $app->attr('views', dirname(__FILE__) . '/minds/');
+  Doris::registerDSN('hospital', 'mysql://root@localhost:3306/cayetano'); 
+});

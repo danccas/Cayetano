@@ -120,6 +120,15 @@ function respuesta(box, pf_id, pregunta_id, text) {
 
     },
   });
+  $.ajax({
+    url: '//127.0.0.1:8001',
+    type: 'POST',
+    data: { },
+    dataType: 'json',
+    success: function(x) {
+
+    },
+  });
 }
 function Cuestionario(params) {
   $.ajax({

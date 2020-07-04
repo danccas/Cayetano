@@ -25,8 +25,7 @@ if($form->byRequest()) {
 #    $rp = Identify::filter('empresa_id', EMPRESA_ID);
     $rp = Identify::login($db, $data['usuario'], $data['clave'], $error);
     if(!empty($rp)) {
-      header("Location: " . RAIZ_WEB);
-      exit();
+      Route::redirect('.');
 
     } else {
       $form->setError($error);

@@ -80,7 +80,7 @@ class Identify {
       SELECT
         U.*
       FROM usuario U
-      WHERE U.usuario = '" . Doris::escape($usuario) . "' " . $where . "
+      WHERE U.usuario = '" . Doris::escape($usuario) . "'
       GROUP BY U.id", true);
   if(empty($dd)) {
     $error = "Los datos son incorrectos(1)";
@@ -125,7 +125,7 @@ class Identify {
   static function direccionar_no_logueado(&$error = null) {
     if(!Identify::verificacion_logeo($error)) {
       if($error['codigo'] === 1) {
-        $url = RAIZ_WEB . 'identificacion';
+        $url = '/identificacion';
         header('location: ' . $url);
         exit("SU: acceso-restingido");
       } elseif($error['codigo'] == 2) {

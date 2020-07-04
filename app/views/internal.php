@@ -27,14 +27,14 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <?php include(VIEWS . 'internal.nav.php'); ?>
+    <?php include(Route::g()->attr('views') . 'internal.nav.php'); ?>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
       <!-- Main Content -->
       <div id="content">
-        <?php include(VIEWS . 'internal.header.php'); ?>
+        <?php include(Route::g()->attr('views') . 'internal.header.php'); ?>
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
@@ -53,14 +53,14 @@
           </div>
           </div>
 <?php } ?>
-          <?php if(isset($VISTA_HTML)) { echo $VISTA_HTML; } else { include(VIEWS . $VISTA . '.php'); } ?>
+          <?php if(isset($VISTA_HTML)) { echo $VISTA_HTML; } else { include(Route::g()->attr('views') . $VISTA . '.php'); } ?>
         </div>
         <!-- /.container-fluid -->
 
       </div>
       <!-- End of Main Content -->
 
-<?php include(VIEWS . 'internal.footer.php'); ?> 
+<?php include(Route::g()->attr('views') . 'internal.footer.php'); ?> 
 
     </div>
     <!-- End of Content Wrapper -->

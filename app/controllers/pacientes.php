@@ -26,7 +26,7 @@ function renderizar_formulario($db, $pf_id) {
     WHERE FP.formulario_id = {$pf['formulario_id']}
     ORDER BY FP.orden ASC");
   ob_start();
-  require_once(VIEWS . 'cuestionario.php');
+  require_once(Route::g()->attr('views') . 'cuestionario.php');
   return ob_get_clean();
 }
 
@@ -59,11 +59,11 @@ Route::any('', function() use($db) {
   $table->setTitle('Relación de Pacientes');
   $table->setHeader(array('DOCUMENTO','NOMBRES','APELLIDOS','TELEFONO','ÚLTIMO CONTACTO'));
   $table->setData(function($e) use($db) {
-    return $db->pagination("
+    return $db->get("
       SELECT
         P.*,
         (SELECT MAX(created_on) FROM paciente_formulario WHERE paciente_id = P.id) as ultimo
-      FROM paciente P", $e);
+      FROM paciente P");
   }, function($n) {
     return array(
       $n['documento_tipo'] . ' ' . $n['documento_numero'],
@@ -116,7 +116,7 @@ Route::any('', function() use($db) {
             if(empty($d[3]) || strpos($d[3], 'DNI') !== false) {
               continue;
             }
-            $existe = $db->get("SELECT * FROM paciente WHERE documento_numero = :documento", false, false, array(
+            $existe = $db->get("SELECT * FROM paciente WHERE documento_numero = :documento", false, array(
               'documento' => $d[3],
             ));
             if(empty($existe)) {
@@ -177,7 +177,7 @@ Route::path('llamar-:id', function($route) use($db) {
       P.*,
       (SELECT MAX(created_on) FROM paciente_formulario WHERE paciente_id = P.id) as ultima
     FROM paciente P
-    WHERE id = " . $route['id'], true);
+    WHERE id = " . $route->current_route['id'], true);
   if(empty($paciente)) {
     _404();
   }
@@ -241,7 +241,7 @@ Route::path('llamar-:id', function($route) use($db) {
     $pregunta_id = $_POST['pregunta_id'];
     $respuesta   = trim($_POST['text']);
     $respuesta   = str_replace('"', '', $respuesta);
-    $db->insert_update('paciente_respuesta', array(
+    $db->insert('paciente_respuesta', array(
       '*paciente_formulario_id' => $pf_id,
       '*pregunta_id' => $pregunta_id,
       'respuesta'    => $respuesta,
