@@ -13,6 +13,6 @@ Route::config(function($app) {
   $app->library('Session');
   $app->libraryOwn('Identify');
 
-  $app->attr('views', dirname(__FILE__) . '/minds/');
-  Doris::registerDSN('hospital', 'mysql://root@localhost:3306/cayetano'); 
+  $app->attr('minds', dirname(__FILE__) . '/minds/');
+  Doris::registerDSN('hospital', 'mysql://hospital:cayetano123@localhost:3306/cayetano'); 
 });

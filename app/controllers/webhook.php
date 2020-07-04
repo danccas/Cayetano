@@ -8,7 +8,7 @@ $re = Formity::getInstance('persona');
 $re->addField('documento_numero', 'input:number')->setMin(9999999)->setMax(99999999)->setStep(1);
 
 $app->any('', function($app) {
-  Bot::config($app->attr('views') . 'fileMind.json');
+  Bot::config($app->attr('minds') . 'fileMind.json');
 
   Bot::registerFormity('persona', function($queue, $re) {
     $queue->reply(json_encode($re->getData()));

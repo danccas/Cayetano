@@ -183,7 +183,8 @@ final class Doris {
           $dsn = $ce->protocol . ':host=' . $ce->hosts['host'] . ';dbname=' . $ce->database;
           $db = new PDO($dsn, $ce->authentication['username'], $ce->authentication['password']);
           $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
+	} catch (PDOException $e) {
+		print_r($e);
           $ce->except('<b>Doris:</b> Can\'t connect to database ' . $ce->protocol . '!');
         }
       }

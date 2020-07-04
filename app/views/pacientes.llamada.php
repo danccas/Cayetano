@@ -105,7 +105,6 @@ setTimeout(function() {
       dataType: 'json',
     });
   });
-
 }, 2000);
 function respuesta(box, pf_id, pregunta_id, text) {
   console.log('RESPUESTA', box);
@@ -116,19 +115,32 @@ function respuesta(box, pf_id, pregunta_id, text) {
     type: 'POST',
     data: { pf_id: pf_id, pregunta_id: pregunta_id, text:  text },
     dataType: 'json',
-    success: function(x) {
-
+    complete: function(x) {
+      actualizar_resultado_ia($(".resultado-ia[data-pf='" + pf_id + "']"));
     },
   });
+}
+var intresp = null;
+function interpretar_respuesta(box, pf_id, pregunta_id, text) {
+  if(intresp !== null) {
+    clearTimeout(intresp);
+  }
+  intresp = setTimeout(function(){
   $.ajax({
-    url: '//127.0.0.1:8001',
+    url: '<?= Route::current() ?>interpretar',
     type: 'POST',
-    data: { },
+    data: { pf_id: pf_id, pregunta_id: pregunta_id, text:  box.value },
     dataType: 'json',
     success: function(x) {
-
+      $(box).closest('.row').find('.respuesta_seleccionada').removeClass('respuesta_seleccionada');
+      if(x.bool) {
+	$(box).closest('.row').find("[data-resp='positivo']").addClass('respuesta_seleccionada');
+      } else {
+	$(box).closest('.row').find("[data-resp='negativo']").addClass('respuesta_seleccionada');
+      }
     },
   });
+  }, 800);
 }
 function Cuestionario(params) {
   $.ajax({
@@ -147,6 +159,7 @@ function Cuestionario(params) {
             data: { tipo: params.tipo, fecha:  params.fecha, click: 1 },
             success: function(x) {
               $(params.box).html(x);
+              actualizar_resultado_ia($(params.box).find('.resultado-ia'));
             }
           });
         });
@@ -155,6 +168,20 @@ function Cuestionario(params) {
         $(params.box).html(x.html);
       }
     }
+  });
+}
+function actualizar_resultado_ia(box) {
+	console.log('actualizar-resultado-ia');
+  $.ajax({
+    url: '<?= Route::current() ?>resultadoia',
+    type: 'POST',
+    data: { pf_id: $(box).attr('data-pf') },
+    beforeSend: function() {
+	    $(box).html('Procesando...');
+    },
+    success: function(x) {
+      $(box).html(x);
+    },
   });
 }
 </script>

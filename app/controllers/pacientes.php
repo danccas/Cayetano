@@ -248,6 +248,66 @@ Route::path('llamar-:id', function($route) use($db) {
       'created_by'   => Identify::g()->id,
     ));
   });
+  Route::any('interpretar', function() use($db, $paciente) {
+    $pf_id = $_POST['pf_id'];
+    $pregunta_id = $_POST['pregunta_id'];
+    $respuesta   = trim($_POST['text']);
+    
+    $cmd = "/usr/bin/python3.6 /var/www/html/cayetano.anccas.org/util/sentimiento2_run.py 2>&1";
+    $out = shell_exec($cmd);
+    $out = trim($out);
+    $bool = $out === 'positivo';
+
+    $db->insert('paciente_respuesta', array(
+      '*paciente_formulario_id' => $pf_id,
+      '*pregunta_id' => $pregunta_id,
+      'respuesta'    => $bool ? 'SI' : 'NO',
+      'created_by'   => Identify::g()->id,
+    ));
+    Route::responseJSON(200, array(
+      'pln'  => $out,
+      'bool' => $bool,
+    ));
+  });
+  Route::any('resultadoia', function() use($db, $paciente) {
+   $pf_id = $_POST['pf_id'];
+   $pf = $db->get("
+    SELECT PF.*
+    FROM paciente_formulario PF
+    WHERE PF.id = {$pf_id}", true);
+  if(empty($pf)) {
+    return;
+  }
+    $preguntas = $db->get("
+    SELECT
+      P.id,
+      PR.respuesta
+    FROM formulario_pregunta FP
+    JOIN pregunta P ON P.id = FP.pregunta_id
+    LEFT JOIN paciente_respuesta PR ON PR.paciente_formulario_id = {$pf_id} AND PR.pregunta_id = P.id
+    WHERE FP.formulario_id = {$pf['formulario_id']}
+    ORDER BY FP.orden ASC");
+   $preguntas = array_map(function($n) { return $n['respuesta'] == 'SI' ? 1 : 0; }, $preguntas);
+   if(count($preguntas) === 7) {
+	   $cadena = implode(',', $preguntas);
+	   $cmd = "/usr/bin/python3.6 /var/www/html/cayetano.anccas.org/util/covid2_run.py";
+	   $out = shell_exec($cmd);
+	   $part = explode('[[', $out);
+	   $part = explode(']]', $out[1]);
+	   $part = trim($part[0]);
+	   $part = explode(' ', $part);
+	   $part = round($part[0]);
+	   if($part == 0) {
+		   echo "<h1 style='color:green'>Baja probabilidad</h1>";
+	   } else {
+		   echo "<h1 style='color:red'>Alta Probabilidad</h1>";
+	   }
+	   #print_r($out);
+
+     } else {
+	echo "<h3># Es necesario completar la encuesta #</h3>";
+     }
+  });
   Route::any('campo', function() use($db, $paciente) {
     $campo  = $_POST['campo'];
     $valor  = trim($_POST['valor']);
