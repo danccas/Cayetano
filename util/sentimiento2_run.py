@@ -22,7 +22,7 @@ classifier = pickle.load(f)
 f.close()
 
 
-test = 'si'
+test = sys.argv[1]
 t_features = {word: (word in word_tokenize(test.lower())) for word in tokens}
 resp = classifier.classify(t_features)
 print(resp)

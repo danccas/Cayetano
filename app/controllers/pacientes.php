@@ -253,7 +253,7 @@ Route::path('llamar-:id', function($route) use($db) {
     $pregunta_id = $_POST['pregunta_id'];
     $respuesta   = trim($_POST['text']);
     
-    $cmd = "/usr/bin/python3.6 /var/www/html/cayetano.anccas.org/util/sentimiento2_run.py 2>&1";
+    $cmd = "/usr/bin/python3.6 /var/www/html/cayetano.anccas.org/util/sentimiento2_run.py \"" . $respuesta . "\"";
     $out = shell_exec($cmd);
     $out = trim($out);
     $bool = $out === 'positivo';
@@ -290,7 +290,7 @@ Route::path('llamar-:id', function($route) use($db) {
    $preguntas = array_map(function($n) { return $n['respuesta'] == 'SI' ? 1 : 0; }, $preguntas);
    if(count($preguntas) === 7) {
 	   $cadena = implode(',', $preguntas);
-	   $cmd = "/usr/bin/python3.6 /var/www/html/cayetano.anccas.org/util/covid2_run.py";
+	   $cmd = "/usr/bin/python3.6 /var/www/html/cayetano.anccas.org/util/covid2_run.py \"" . $cadena . "\"";
 	   $out = shell_exec($cmd);
 	   $part = explode('[[', $out);
 	   $part = explode(']]', $out[1]);

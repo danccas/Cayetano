@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import tensorflow as tf
 import os
@@ -77,4 +78,5 @@ with tf.Session() as sess:
         _, c = sess.run([optimizador, cost], feed_dict={
                         X: train_X, Y: train_Y})
 
-    print ('>>>', sess.run(pred, feed_dict = {X: [[0,0,0,0,0,0,0]] }), '<<<')
+    temp = sys.argv[1].split(',')
+    print ('>>>', sess.run(pred, feed_dict = {X: [temp] }), '<<<')

@@ -6,8 +6,8 @@ from nltk.tokenize import word_tokenize
 
 #nltk.download('punkt')
 
-poss = pd.read_csv('dataset_sentimiento/train-positivo2.txt')
-negs = pd.read_csv('dataset_sentimiento/train-negativo2.txt')
+poss = pd.read_csv('dataset_sentimiento/train-positivo3.txt')
+negs = pd.read_csv('dataset_sentimiento/train-negativo3.txt')
 poss.columns = ["text"]
 negs.columns = ["text"]
 
